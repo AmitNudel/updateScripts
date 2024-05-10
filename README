@@ -1,0 +1,28 @@
+Update scripts
+
+This repository contains a collection of shell scripts designed to automate system maintenance tasks on Linux/macOS. The scripts are modular and well-organized, promoting code reusability and easier management.
+
+Key Features:
+
+Modular Design: Scripts are separated into logical sections for pre-checks, basic checks, cleanup functions, and updates.
+Dynamic Script Sourcing: The main script iterates through directories and sources relevant check or update scripts, making it adaptable to adding new functionalities.
+Pre-check Script: A pre-check script ensures a safe environment before running cleanup tasks (e.g., checking for running snaps).
+Automatic Updates: The script can be configured to run periodically (e.g., monthly) to keep your system up-to-date and optimized.
+
+
+How to Use:
+
+Clone this repository to your desired location.
+Review the scripts within the tools and basics directories (if used) to understand their functionalities. (Modify script paths in rules_for_once_a_month.sh if necessary)
+Make the scripts executable using chmod +x script_name.sh.
+Configure a cron job (Linux) or Task Scheduler task (Windows) to run the main.sh script periodically (e.g., monthly).
+
+Customization:
+
+You can add new check or update scripts within the tools directory following the naming convention.
+Modify the rules_for_once_a_month.sh script to adjust the order of execution or add additional logic.
+The basics directory provides a way to further categorize your scripts based on functionality (modify the script to match your structure if used).
+
+Disclaimer:
+
+While these scripts are designed to be helpful, it's recommended to review the contents of each script before running them on your system. Always test the scripts in a non-critical environment before deploying them to your main system.
