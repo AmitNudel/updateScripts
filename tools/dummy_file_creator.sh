@@ -1,24 +1,22 @@
 #!/bin/bash
 
-# Function to create a single dummy file
 create_dummy_file() {
-  local file_path=$1
-  local content=$2
+  local file_path="$1"
+  local content="$2"
 
   touch "$file_path"
 
-  if [ ! -z "$content" ]; then
+  if [ -n "$content" ]; then
     echo -n "$content" > "$file_path"
   fi
 }
 
-# Function to create multiple dummy files
 create_multiple_dummy_files() {
-  local directory=$1
-  local num_files=$2
-  local prefix=$3
-  local content=$4
-  local extension=$5
+  local directory="$1"
+  local num_files="$2"
+  local prefix="$3"
+  local content="$4"
+  local extension="$5"
 
   mkdir -p "$directory"
 
@@ -28,36 +26,36 @@ create_multiple_dummy_files() {
   done
 }
 
-# Main script
-if [ "$#" -lt 3 ]; then
-  echo "Usage: $0 <directory> <num_files> [--prefix=<prefix>] [--content=<content>] [--extension=<extension>]"
-  exit 1
-fi
+main() {
+  if [ "$#" -lt 3 ]; then
+    echo "Usage: $0 <directory> <num_files> [--prefix=<prefix>] [--content=<content>] [--extension=<extension>]"
+    exit 1
+  fi
 
-DIRECTORY=$1
-NUM_FILES=$2
-PREFIX="dummy"
-CONTENT=""
-EXTENSION="txt"
+  local directory="$1"
+  local num_files="$2"
+  local prefix="dummy"
+  local content=""
+  local extension="txt"
 
-# Parse optional arguments
-for arg in "$@"; do
-  case $arg in
-    --prefix=*)
-      PREFIX="${arg#*=}"
-      shift
-      ;;
-    --content=*)
-      CONTENT="${arg#*=}"
-      shift
-      ;;
-    --extension=*)
-      EXTENSION="${arg#*=}"
-      shift
-      ;;
-  esac
-done
+  shift 2
 
-create_multiple_dummy_files "$DIRECTORY" "$NUM_FILES" "$PREFIX" "$CONTENT" "$EXTENSION"
+  for arg in "$@"; do
+    case $arg in
+      --prefix=*)
+        prefix="${arg#*=}"
+        ;;
+      --content=*)
+        content="${arg#*=}"
+        ;;
+      --extension=*)
+        extension="${arg#*=}"
+        ;;
+    esac
+  done
 
-echo "Created $NUM_FILES dummy files in $DIRECTORY."
+  create_multiple_dummy_files "$directory" "$num_files" "$prefix" "$content" "$extension"
+  echo "Created $num_files dummy files in $directory."
+}
+
+main "$@"
