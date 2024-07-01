@@ -12,6 +12,9 @@ compress_files() {
 
   if [ -z "$compression_format" ]; then
     compression_format="tar.gz"
+  elif ! [[ "$compression_format" =~ ^(tar\.gz|tgz|tar\.bz2|tbz2|tar\.xz|txz)$ ]]; then
+    echo "Error: Unsupported compression format '$compression_format'. Supported formats are: tar.gz, tgz, tar.bz2, tbz2, tar.xz, txz"
+    exit 1
   fi
 
   if ! [[ "$output_file" == *."$compression_format" ]]; then
