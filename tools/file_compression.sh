@@ -1,4 +1,29 @@
 #!/bin/bash
+set -o errexit
+
+readonly DEFAULT_COMPRESSION_FORMAT="tar.gz"
+readonly -A COMPRESSION_OPTIONS=(
+  ["tar.gz"]="tar czf"
+  ["tgz"]="tar czf"
+  ["tar.bz2"]="tar cjf"
+  ["tbz2"]="tar cjf"
+  ["tar.xz"]="tar cJf"
+  ["txz"]="tar cJf"
+  ["zip"]="zip -r"
+  ["gz"]="gzip -c"
+  ["bz2"]="bzip2 -c"
+  ["xz"]="xz -c"
+  ["7z"]="7z a"
+)
+
+execute_command() {
+  local command="$1"
+  shift
+  if ! $command "$@"; then
+    echo "Error: Failed to execute '$command'"
+    exit 1
+  fi
+}
 
 compress_files() {
   local path="$1"
@@ -11,22 +36,31 @@ compress_files() {
   fi
 
   if [ -z "$compression_format" ]; then
-    compression_format="tar.gz"
-  elif ! [[ "$compression_format" =~ ^(tar\.gz|tgz|tar\.bz2|tbz2|tar\.xz|txz)$ ]]; then
-    echo "Error: Unsupported compression format '$compression_format'. Supported formats are: tar.gz, tgz, tar.bz2, tbz2, tar.xz, txz"
+    compression_format="$DEFAULT_COMPRESSION_FORMAT"
+  fi
+
+  if [[ ! "${COMPRESSION_OPTIONS[$compression_format]+isset}" ]]; then
+    echo "Error: Unsupported compression format '$compression_format'. Supported formats are: ${!COMPRESSION_OPTIONS[@]}"
     exit 1
   fi
 
-  if ! [[ "$output_file" == *."$compression_format" ]]; then
+  if [[ "$output_file" != *."${compression_format}" ]]; then
     output_file="${output_file}.${compression_format}"
   fi
 
   echo "Compressing '$path' to '$output_file'..."
-  if [ -d "$path" ]; then
-    tar -czf "$output_file" -C "$path" .
-  elif [ -f "$path" ]; then
-    tar -czf "$output_file" -C "$(dirname "$path")" "$(basename "$path")"
+
+  local command="${COMPRESSION_OPTIONS[$compression_format]}"
+  if [ "$compression_format" == "zip" ]; then
+    execute_command "$command" "$output_file" "$path"
+  else
+    if [ -d "$path" ]; then
+      execute_command "$command" "$output_file" -C "$path" .
+    elif [ -f "$path" ]; then
+      execute_command "$command" "$output_file" -C "$(dirname "$path")" "$(basename "$path")"
+    fi
   fi
+
   echo "Compression complete."
 }
 
