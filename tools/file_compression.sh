@@ -1,4 +1,7 @@
 #!/bin/bash
+
+source ./utils/execute_command.sh
+
 set -o errexit
 
 readonly DEFAULT_COMPRESSION_FORMAT="tar.gz"
@@ -15,15 +18,6 @@ readonly -A COMPRESSION_OPTIONS=(
   ["xz"]="xz -c"
   ["7z"]="7z a"
 )
-
-execute_command() {
-  local command="$1"
-  shift
-  if ! $command "$@"; then
-    echo "Error: Failed to execute '$command'"
-    exit 1
-  fi
-}
 
 compress_files() {
   local path="$1"

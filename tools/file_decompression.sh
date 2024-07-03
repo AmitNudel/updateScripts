@@ -1,4 +1,7 @@
 #!/bin/bash
+
+source ./utils/execute_command.sh
+
 set -o errexit
 
 readonly -A DECOMPRESSION_OPTIONS=(
@@ -14,15 +17,6 @@ readonly -A DECOMPRESSION_OPTIONS=(
   ["xz"]="unxz -c"
   ["7z"]="7z x"
 )
-
-execute_command() {
-  local command="$1"
-  shift
-  if ! $command "$@"; then
-    echo "Error: Failed to execute '$command'"
-    exit 1
-  fi
-}
 
 decompress_files() {
   local archive_file="$1"
