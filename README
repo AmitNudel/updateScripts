@@ -14,7 +14,7 @@ How to Use:
 
 Clone this repository to your desired location.
 Review the scripts within the tools and basics directories (if used) to understand their functionalities. (Modify script paths in rules_for_once_a_month.sh if necessary)
-Make the scripts executable using chmod +x script_name.sh.
+Make the scripts executable by giving premission to the setup.sh script, and running it.
 Configure a cron job (Linux) or Task Scheduler task (Windows) to run the main.sh script periodically (e.g., monthly).
 
 Customization:
